@@ -1,25 +1,3 @@
-;; INSTALL PACKAGES
-
-(require 'package) ;; You might already have this line
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/") t)
-(when (< emacs-major-version 24)
-  ;; For important compatibility libraries like cl-lib
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
-(package-initialize) ;; You might already have this line
-
-(when (not package-archive-contents)
-  (package-refresh-contents))
-
-(defvar myPackages
-  '(better-defaults
-    material-theme))
-
-(mapc #'(lambda (package)
-          (unless (package-installed-p package)
-            (package-install package)))
-      myPackages)
-
 ;; Show line-number in the mode line
 (line-number-mode 1)
 
@@ -34,16 +12,7 @@
 
 ;; In every buffer, the line which contains the cursor will be fully
 ;; highlighted
-
 (global-hl-line-mode 1)
-(set-face-background hl-line-face "gray13")
-
-;; save emacs backups to temp file directory
-(setq backup-directory-alist
-      `((".*" . ,"~/.emacs-backups/")))
-(setq auto-save-file-name-transforms
-      `((".*" ,"~/.emacs-backups/" t)))
-
 
 ;; change minibuffer color
 (set-face-foreground 'minibuffer-prompt "white")
@@ -56,6 +25,32 @@
 
 ;; Disable startup message
 (setq inhibit-startup-message t)
+
+;;(require 'package) ;; You might already have this line
+;;(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+;;                    (not (gnutls-available-p))))
+;;       (url (concat (if no-ssl "http" "https") "://melpa.org/packages/")))
+;;  (add-to-list 'package-archives (cons "melpa" url) t))
+
+(require 'package)
+(add-to-list 'package-archives
+                    '("melpa" . "http://melpa.org/packages/") t)
+
+(package-initialize)
+(when (not package-archive-contents)
+  (package-refresh-contents))
+
+(defvar myPackages
+  '(better-defaults
+    elpy
+    sphinx-doc
+    material-theme
+    gruvbox-theme))
+
+(mapc #'(lambda (package)
+          (unless (package-installed-p package)
+            (package-install package)))
+            myPackages)
 
 ;; to disable automatic indentation
 (add-hook 'php-mode-hook
@@ -89,15 +84,55 @@
   (compile (concat "python " (buffer-name))))
 (setq compilation-scroll-output t)
 
+(add-hook 'python-mode-hook (lambda ()
+                                   (require 'sphinx-doc)
+                                   (sphinx-doc-mode t)))
+          
+
 ;;(add-hook 'python-mode-hook
 ;;  (local-set-key "\C-c\C-c" 'python-compile))
 
-;; Never expire ssh password
-(setq password-cache-expiry nil)
 
-;;(require 'better-defaults)
-(mapc #'(lambda (package)
-          (require package))
-      myPackages)
+;; never expire password cache
+(setq password-cache-expiry nil)
+(put 'downcase-region 'disabled nil)
+
+;; run sudo shell commands
+(defun sudo-shell-command (command)
+  (interactive "MShell command (root): ")
+  (with-temp-buffer
+    (cd "/sudo::/")
+    (async-shell-command command)))
+
+;; Enable flycheck globally
+;;(add-hook 'after-init-hook #'global-flycheck-mode)
 
 (load-theme 'material t)
+
+(require 'better-defaults)
+
+(elpy-enable)
+
+;; save emacs backups to temp file directory
+(setq backup-directory-alist
+      `((".*" . ,"~/.emacs-backups/")))
+(setq auto-save-file-name-transforms
+      `((".*" ,"~/.emacs-backups/" t)))
+
+;; Disable automatic indentation on new line.
+(when (fboundp 'electric-indent-mode) (electric-indent-mode -1))
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("021720af46e6e78e2be7875b2b5b05344f4e21fad70d17af7acfd6922386b61e" "42b9d85321f5a152a6aef0cc8173e701f572175d6711361955ecfb4943fe93af" "ed0b4fc082715fc1d6a547650752cd8ec76c400ef72eb159543db1770a27caa7" "6ac7c0f959f0d7853915012e78ff70150bfbe2a69a1b703c3ac4184f9ae3ae02" "718fb4e505b6134cc0eafb7dad709be5ec1ba7a7e8102617d87d3109f56d9615" "a24c5b3c12d147da6cef80938dca1223b7c7f70f2f382b26308eba014dc4833a" default))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
