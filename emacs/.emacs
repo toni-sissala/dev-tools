@@ -44,6 +44,7 @@
   '(better-defaults
     elpy
     sphinx-doc
+    restclient
     material-theme
     gruvbox-theme))
 
