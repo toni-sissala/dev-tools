@@ -123,6 +123,9 @@
 ;; Disable automatic indentation on new line.
 (when (fboundp 'electric-indent-mode) (electric-indent-mode -1))
 
+;; Org-mode TODO: log time when marked done.
+(setq org-log-done 'time)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
