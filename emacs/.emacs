@@ -45,6 +45,7 @@
     elpy
     sphinx-doc
     restclient
+    monky
     material-theme
     gruvbox-theme))
 
