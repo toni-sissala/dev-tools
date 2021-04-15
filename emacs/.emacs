@@ -46,6 +46,7 @@
     sphinx-doc
     restclient
     monky
+    magit
     material-theme
     gruvbox-theme))
 
