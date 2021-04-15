@@ -1,1 +1,2 @@
 escape ^Oo
+setenv PATH ~/.local/bin:$PATH
